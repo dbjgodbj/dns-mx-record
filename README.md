@@ -3,7 +3,7 @@
 A web application that displays the IP addresses and mail hosts associated with a user-entered domain name.
 
 ## Requirements
-· The application should be written in either Python or Go
+· The application should be written in Go
 
 · The application should listen on port 8080
 
