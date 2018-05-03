@@ -7,7 +7,7 @@ A web application that displays the IP addresses and mail hosts associated with 
 
 · The application should listen on port 8080
 
-· When visiting the root resource of your app (http://localhost:8080/), display a form asking for a domain name (e.g. dyn.com)
+· When visiting the root resource of your app (http://localhost:8080/), display a form asking for a domain name (e.g. domain.com)
 
 · When that value is submitted, display the IP addresses associated with the domain and the hosts associated with that domain's DNS MX records.
 
