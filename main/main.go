@@ -7,17 +7,18 @@
    -
    - Description: This is a web application that displays the IP addresses and mail hosts associated with an
    -              user-entered domain name.
+   -
    - Requirements:
-   - 				. The application should be written in either Python or Go.
-   - 				. The application should listen on port 8080
-   - 				. When visiting the root resource of your app (http://localhost:8080/),
-   -                  display a form asking for a domain name (e.g. dyn.com)
-   - 				. When that value is submitted, display the IP addresses associated with the domain and the hosts
-   -                  associated with that domain's DNS MX records.
-   - 				. If the results page is accessed with the HTTP Accept header set to "application/json",
-   -                  render a JSON response instead of HTML
-   - 				...Note, in this case, the Accept header will only be "application/json".
-   -                   No further content negotiation settings will be asked for.
+   - . The application should be written in either Python or Go.
+   - . The application should listen on port 8080
+   - . When visiting the root resource of your app (http://localhost:8080/),
+   -   display a form asking for a domain name (e.g. dyn.com)
+   - . When that value is submitted, display the IP addresses associated with the domain and the hosts
+   -   associated with that domain's DNS MX records.
+   - . If the results page is accessed with the HTTP Accept header set to "application/json",
+   -   render a JSON response instead of HTML
+   - ...Note, in this case, the Accept header will only be "application/json".
+   -
    - -----------------------------------------------------------------------------------------------------------------*/
 package main
 
@@ -37,11 +38,11 @@ import (
 var log = logging.MustGetLogger("main")
 
 type dns_json struct {
-	DnsMx string
+	Url string
 }
 
 // - ------------------------------------------------------------------------------------------------------------------
-// - Json handler used to retrieve the IP and MX data to the Json data
+// - Json handler used to retrieve the IP and MX data to the Json format
 // - ------------------------------------------------------------------------------------------------------------------
 func jsonHandler(w http.ResponseWriter, r *http.Request) {
 
@@ -65,10 +66,10 @@ func jsonHandler(w http.ResponseWriter, r *http.Request) {
 		err := decoder.Decode(&request)
 
 
-		log.Debugf("Called jsonHandler function and with input parameter domain as %s", request.DnsMx)
+		log.Debugf("Called jsonHandler function and with input parameter domain as %s", request.Url)
 
 		// Research the IP and MX data based on an URL parameter
-		Dns, err := network.GetDNS(request.DnsMx)
+		Dns, err := network.GetDNS(request.Url)
 		if err != nil {
 			log.Errorf("The DNS get function failed with error %s and will return to the web client the error %v",
 				        err.Error(), http.StatusInternalServerError)
