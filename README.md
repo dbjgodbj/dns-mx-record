@@ -3,11 +3,16 @@
 A web application that displays the IP addresses and mail hosts associated with a user-entered domain name.
 
 ## Requirements
-· The application should be written in either Python or Go.
+· The application should be written in either Python or Go
+
 · The application should listen on port 8080
+
 · When visiting the root resource of your app (http://localhost:8080/), display a form asking for a domain name (e.g. dyn.com)
+
 · When that value is submitted, display the IP addresses associated with the domain and the hosts associated with that domain's DNS MX records.
+
 · If the results page is accessed with the HTTP Accept header set to "application/json", render a JSON response instead of HTML
+
     o Note, in this case, the Accept header will only be "application/json". No further content negotiation settings will be asked for.
 
 ## Getting Started
