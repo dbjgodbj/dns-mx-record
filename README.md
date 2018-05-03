@@ -18,6 +18,7 @@ A web application that displays the IP addresses and mail hosts associated with 
 ## Getting Started
 
  1 - There is a contants.go file used to store the URL Port (default is 8080) and the Index template path
+ 
  2 - The program can be executed in the project root path (path where the main.go file is available) using the command below:
  ```
  go run main.go
