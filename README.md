@@ -1,4 +1,4 @@
-# DNS MX Record Web Service Test
+# DNS MX Record Web Application
 
 A web application that displays the IP addresses and mail hosts associated with a user-entered domain name.
 
