@@ -13,7 +13,7 @@ type dns_json struct {
 	Url string
 }
 
-var log = logging.MustGetLogger("jsonController")
+var log = logging.MustGetLogger("controllers")
 
 // - ------------------------------------------------------------------------------------------------------------------
 // - Json handler used to retrieve the IP and MX data to the Json format
