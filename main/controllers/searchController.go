@@ -34,3 +34,4 @@ func SearchHandler(w http.ResponseWriter, r *http.Request) {
 	t,_ := template.ParseFiles(constants.INDEX)
 	t.Execute(w, Dns)
 }
+

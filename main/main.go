@@ -59,7 +59,7 @@ func main() {
 	// - --------------------------------------------------------------------------------------------------------------
 	// - Define the web root path for css, js and any asset used on the HTML templates
 	// - --------------------------------------------------------------------------------------------------------------
-	rtr.PathPrefix("/static/").Handler(http.StripPrefix("/static/", http.FileServer(http.Dir("./static"))))
+		rtr.PathPrefix("/static/").Handler(http.StripPrefix("/static/", http.FileServer(http.Dir("./static"))))
 
 	// - --------------------------------------------------------------------------------------------------------------
 	// - Start HTTP handle
