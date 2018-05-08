@@ -23,134 +23,38 @@
 package main
 
 import (
-	"fmt"
 	"net/http"
-	"html/template"
-	"encoding/json"
-	"bytes"
 
 	"github.com/op/go-logging"
-	"github.com/kururu-br/dns-mx-record/main/network"
 	"github.com/kururu-br/dns-mx-record/main/constants"
 	"github.com/gorilla/mux"
+	"github.com/kururu-br/dns-mx-record/main/controllers"
 )
 
 var log = logging.MustGetLogger("main")
-
-type dns_json struct {
-	Url string
-}
-
-// - ------------------------------------------------------------------------------------------------------------------
-// - Json handler used to retrieve the IP and MX data to the Json format
-// - ------------------------------------------------------------------------------------------------------------------
-func jsonHandler(w http.ResponseWriter, r *http.Request) {
-
-	// - --------------------------------------------------------------------------------------------------------------
-	// - Get Accept header (e.g. "application/json")
-	// - --------------------------------------------------------------------------------------------------------------
-	accept := r.Header.Get("Accept")
-
-	switch accept {
-
-	// - --------------------------------------------------------------------------------------------------------------
-	// - Requirement: If the results page is accessed with the HTTP Accept header set to
-	// - "application/json", render a JSON response instead of HTML
-	// - --------------------------------------------------------------------------------------------------------------
-	case "application/json":
-
-		decoder := json.NewDecoder(r.Body)
-
-		var request dns_json
-
-		err := decoder.Decode(&request)
-
-
-		log.Debugf("Called jsonHandler function and with input parameter domain as %s", request.Url)
-
-		// Research the IP and MX data based on an URL parameter
-		Dns, err := network.GetDNS(request.Url)
-		if err != nil {
-			log.Errorf("The DNS get function failed with error %s and will return to the web client the error %v",
-				        err.Error(), http.StatusInternalServerError)
-
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
-		// - ----------------------------------------------------------------------------------------------------------
-		// - Handler Accept header as JSON
-		// - ----------------------------------------------------------------------------------------------------------
-		jsonData, _ := json.Marshal(Dns)
-
-		// - ----------------------------------------------------------------------------------------------------------
-		// - Render a JSON response instead of HTML
-		// - ----------------------------------------------------------------------------------------------------------
-		fmt.Fprint(w, bytes.NewBuffer(jsonData))
-		return
-	}
-}
-
-// - ------------------------------------------------------------------------------------------------------------------
-// - Search handler used to manage the search form POST
-// - ------------------------------------------------------------------------------------------------------------------
-func searchHandler(w http.ResponseWriter, r *http.Request) {
-
-	// - --------------------------------------------------------------------------------------------------------------
-	// - Retrieve the HTML form parameter of POST method
-	// - --------------------------------------------------------------------------------------------------------------
-	url := r.FormValue("entry-domain")
-
-	log.Debugf("Called searchHandler function and retrieving the parameter entry-domain as %s", url)
-
-	// - --------------------------------------------------------------------------------------------------------------
-	// - Get the IP and MX data based on the URL parameter
-	// - --------------------------------------------------------------------------------------------------------------
-	Dns, err  := network.GetDNS(url)
-	if err != nil {
-		log.Errorf("The DNS get function failed with error %s and will return to the web client the error %v",
-			        err.Error(), http.StatusInternalServerError)
-
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-
-	t,_ := template.ParseFiles(constants.INDEX)
-	t.Execute(w, Dns)
-
-}
-
-// - ------------------------------------------------------------------------------------------------------------------
-// - Root handler used to show the index html page
-// - ------------------------------------------------------------------------------------------------------------------
-func rootHandler(w http.ResponseWriter, r *http.Request) {
-
-	log.Debug("Called rootHandler function and redirecting to the index page")
-
-	t,_ := template.ParseFiles(constants.INDEX)
-	t.Execute(w, nil)
-
-}
 
 // - ------------------------------------------------------------------------------------------------------------------
 // - Entry point from golang application
 // - ------------------------------------------------------------------------------------------------------------------
 func main() {
 
+	log.Infof("Started DNS MX Record Application. URL Port [%v] ", constants.PORT)
+
 	rtr := mux.NewRouter()
 	// - --------------------------------------------------------------------------------------------------------------
 	// - Router from / url and redirect to the root handler
 	// - --------------------------------------------------------------------------------------------------------------
-	rtr.HandleFunc("/",       rootHandler  )
+	rtr.HandleFunc("/",       controllers.RootHandler)
 
 	// - --------------------------------------------------------------------------------------------------------------
 	// - Router of /search url and redirect to the search handler when submitting the HTML form
 	// - --------------------------------------------------------------------------------------------------------------
-	rtr.HandleFunc("/search", searchHandler)
+	rtr.HandleFunc("/search", controllers.SearchHandler)
 
 	// - --------------------------------------------------------------------------------------------------------------
 	// - Router of /json url and redirect to the json handler used to retrieve the IP and MX data in JSON format
 	// - --------------------------------------------------------------------------------------------------------------
-	rtr.HandleFunc("/json",   jsonHandler).Methods("POST")
+	rtr.HandleFunc("/json",   controllers.JsonHandler).Methods("POST")
 
 	// - --------------------------------------------------------------------------------------------------------------
 	// - Define the web root path for css, js and any asset used on the HTML templates
