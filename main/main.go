@@ -165,5 +165,5 @@ func main() {
 	// - --------------------------------------------------------------------------------------------------------------
 	// Application will listen port <nnnn>, where nnnn is configured on constants package
 	// - --------------------------------------------------------------------------------------------------------------
-	fmt.Println(http.ListenAndServe(constants.PORT, nil))
+	log.Fatal(http.ListenAndServe(constants.PORT, nil))
 }
